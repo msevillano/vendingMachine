@@ -1,0 +1,25 @@
+# JetBrains Folders
+.idea
+
+# VSCode Folders
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+
+# OS generated files
+.DS_Store
+.DS_Store?
+
+# package directories
+node_modules
+jspm_packages
+
+# Tests
+.nyc_output
+coverage
+
+# Compiled code
+dist
+
+# Env vars
+.env

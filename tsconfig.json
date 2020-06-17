@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["es2017", "esnext.asynciterable"],
+    "strict": true,
+    "typeRoots": ["node_modules/@types", "./@types"],
+    "types": ["jest", "node"],
+    "outDir": "./dist",
+    "baseUrl": "./src"
+  },
+  "include": ["src/**/*.ts", "@types/**/*.d.ts"],
+  "exclude": ["node_modules"]
+}
