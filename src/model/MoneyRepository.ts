@@ -1,6 +1,10 @@
-export default class MoneyRepository {
+import IPayment from "../interface/IPayment";
+import IState from "../interface/IState";
+
+export default class MoneyRepository implements IPayment {
   private existingMoney: Map<number, number>;
   private availableBalance: number;
+  private _stateProvider?: IState;
 
   public constructor(acceptedValues: number[]) {
     this.existingMoney = new Map<number, number>();
@@ -8,6 +12,10 @@ export default class MoneyRepository {
       this.existingMoney.set(value, 0);
     });
     this.availableBalance = 0;
+  }
+
+  public set stateProvider(stateProvider: IState) {
+    this._stateProvider = stateProvider;
   }
 
   public get balance(): number {
@@ -25,6 +33,15 @@ export default class MoneyRepository {
       },
       this.availableBalance
     );
+  }
+
+  public setMoney(moneyElement: number, amount: number): void {
+    if (this._stateProvider && !this._stateProvider.isOnService)
+      throw new Error("Service mode is required for this operation");
+    if (!this.isAceptedValue(moneyElement))
+      throw new Error("invalid currency format");
+
+    this.setMoneyValues(moneyElement, amount);
   }
 
   public returnMoney(): number[] {
@@ -62,6 +79,11 @@ export default class MoneyRepository {
   private addMoneyValues(value: number, amount: number): void {
     const currentValue = this.existingMoney.get(value) as number;
     this.existingMoney.set(value, currentValue + amount);
+  }
+
+  private setMoneyValues(value: number, amount: number): void {
+    const currentValue = this.existingMoney.get(value) as number;
+    this.existingMoney.set(value, amount);
   }
 
   private removeMoneyValues(value: number, amount: number): void {
