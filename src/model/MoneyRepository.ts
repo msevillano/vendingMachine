@@ -1,5 +1,5 @@
-import IPayment from "../interface/IPayment";
-import IState from "../interface/IState";
+import IPayment from '../interface/IPayment';
+import IState from '../interface/IState';
 
 export default class MoneyRepository implements IPayment {
   private existingMoney: Map<number, number>;
@@ -24,22 +24,18 @@ export default class MoneyRepository implements IPayment {
 
   public addMoney(moneyElements: number[]): void {
     if (!moneyElements.every((moneyValue) => this.isAceptedValue(moneyValue)))
-      throw new Error("invalid currency format");
+      throw new Error('Invalid currency format');
 
     moneyElements.forEach((element) => this.addMoneyValues(element, 1));
-    this.availableBalance = moneyElements.reduce(
-      (accumulator, currentValue) => {
-        return accumulator + currentValue;
-      },
-      this.availableBalance
-    );
+    this.availableBalance = moneyElements.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    }, this.availableBalance);
   }
 
   public setMoney(moneyElement: number, amount: number): void {
     if (this._stateProvider && !this._stateProvider.isOnService)
-      throw new Error("Service mode is required for this operation");
-    if (!this.isAceptedValue(moneyElement))
-      throw new Error("invalid currency format");
+      throw new Error('Service mode is required for this operation');
+    if (!this.isAceptedValue(moneyElement)) throw new Error('Invalid currency format');
 
     this.setMoneyValues(moneyElement, amount);
   }
@@ -47,7 +43,7 @@ export default class MoneyRepository implements IPayment {
   public returnMoney(): number[] {
     const returnMap = this.howToReturn(this.availableBalance);
 
-    const moneyToReturn = [];
+    const moneyToReturn: number[] = [];
     for (const [value, amount] of returnMap) {
       this.removeMoneyValues(value, amount);
       moneyToReturn.push(...Array(amount).fill(value));
@@ -57,8 +53,7 @@ export default class MoneyRepository implements IPayment {
   }
 
   public finishTransaction(amountToCommit?: number): void {
-    this.availableBalance =
-      this.availableBalance - (amountToCommit ?? this.availableBalance);
+    this.availableBalance = this.availableBalance - (amountToCommit ?? this.availableBalance);
   }
 
   private isAceptedValue(moneyValue: number): boolean {
@@ -82,7 +77,6 @@ export default class MoneyRepository implements IPayment {
   }
 
   private setMoneyValues(value: number, amount: number): void {
-    const currentValue = this.existingMoney.get(value) as number;
     this.existingMoney.set(value, amount);
   }
 
@@ -106,7 +100,7 @@ export default class MoneyRepository implements IPayment {
         reducedAmount = reducedAmount - value * availableAmount;
       }
     }
-    if (reducedAmount) throw new Error("given amount is not returnable");
+    if (reducedAmount) throw new Error('given amount is not returnable');
     return valuesToReturn;
   }
 }
