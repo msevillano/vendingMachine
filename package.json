@@ -4,7 +4,7 @@
   "description": "vending machine app",
   "main": "",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node src/server.ts",
     "build": "tsc -p .",
     "test": "jest --coverage",
     "lint": "eslint  . --ext .ts",
@@ -17,8 +17,14 @@
     "type": "git",
     "url": ""
   },
-  "dependencies": {},
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
   "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/express-session": "^1.17.0",
     "@types/jest": "^25.2.3",
     "@types/node": "^14.0.5",
     "@typescript-eslint/eslint-plugin": "^3.0.1",

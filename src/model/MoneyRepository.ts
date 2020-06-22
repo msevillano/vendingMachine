@@ -1,3 +1,5 @@
+import CodedError from '../utils/CodedError';
+
 import IPayment from '../interface/IPayment';
 import IState from '../interface/IState';
 
@@ -24,7 +26,7 @@ export default class MoneyRepository implements IPayment {
 
   public addMoney(moneyElements: number[]): void {
     if (!moneyElements.every((moneyValue) => this.isAceptedValue(moneyValue)))
-      throw new Error('Invalid currency format');
+      throw new CodedError('Invalid currency format', 400);
 
     moneyElements.forEach((element) => this.addMoneyValues(element, 1));
     this.availableBalance = moneyElements.reduce((accumulator, currentValue) => {
@@ -34,8 +36,8 @@ export default class MoneyRepository implements IPayment {
 
   public setMoney(moneyElement: number, amount: number): void {
     if (this._stateProvider && !this._stateProvider.isOnService)
-      throw new Error('Service mode is required for this operation');
-    if (!this.isAceptedValue(moneyElement)) throw new Error('Invalid currency format');
+      throw new CodedError('Service mode is required for this operation', 403);
+    if (!this.isAceptedValue(moneyElement)) throw new CodedError('Invalid currency format', 400);
 
     this.setMoneyValues(moneyElement, amount);
   }
@@ -100,7 +102,7 @@ export default class MoneyRepository implements IPayment {
         reducedAmount = reducedAmount - value * availableAmount;
       }
     }
-    if (reducedAmount) throw new Error('given amount is not returnable');
+    if (reducedAmount) throw new CodedError('given amount is not returnable', 500);
     return valuesToReturn;
   }
 }

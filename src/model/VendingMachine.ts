@@ -1,3 +1,5 @@
+import CodedError from '../utils/CodedError';
+
 import IPayment from '../interface/IPayment';
 import IState from '../interface/IState';
 
@@ -22,8 +24,8 @@ export default class VendingMachine implements IState {
   }
 
   public setStock(articleName: string, amount: number): void {
-    if (!this.isOnService) throw new Error('Service mode is required for this operation');
-    if (!this.collection.has(articleName)) throw new Error('This article is not supported');
+    if (!this.isOnService) throw new CodedError('Service mode is required for this operation', 403);
+    if (!this.collection.has(articleName)) throw new CodedError('This article is not supported', 400);
     const currentArticleStatus = this.getArticleData(articleName);
     this.collection.set(articleName, {
       price: currentArticleStatus.price,
@@ -32,13 +34,14 @@ export default class VendingMachine implements IState {
   }
 
   public selectArticle(articleName: string): void {
-    if (this.isOnService) throw new Error('Cant sell articles while on service');
-    if (!this.collection.has(articleName)) throw new Error('This article is not supported');
+    if (this.isOnService) throw new CodedError('Cant sell articles while on service', 400);
+    if (!this.collection.has(articleName)) throw new CodedError('This article is not supported', 400);
 
     const articleData = this.getArticleData(articleName);
-    if (!articleData.amount) throw new Error('This article is out of stock');
+    if (!articleData.amount) throw new CodedError('This article is out of stock', 400);
 
-    if (articleData.price > this.paymentSystem.balance) throw new Error('Insufficient balance to perform transaction');
+    if (articleData.price > this.paymentSystem.balance)
+      throw new CodedError('Insufficient balance to perform transaction', 400);
 
     this.paymentSystem.finishTransaction(articleData.price);
     this.collection.set(articleName, {
