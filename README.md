@@ -45,7 +45,7 @@ and understand what the feature is supposed to do before reading the actual code
 - Installing Node, NPM and its dependencies can be avoided by creating an image with the Dockerfile provided, this
   dockerfile will try to use the `.env` file so no arguments will be needed on image start (take into account that the
   command`cp .env.example .env` will be a prerequisite for this).  
-  To start a container with the image execute `docker run -p 4000:4000 <image>`, take into account that logFile will be
+  To start a container with the image execute `docker run -p 3000:3000 <image>`, take into account that logFile will be
   inside the container.
 
 ## How to
